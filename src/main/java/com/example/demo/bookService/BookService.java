@@ -1,12 +1,15 @@
 package com.example.demo.bookService;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.example.demo.entity.Book;
 
 public interface BookService {
 	
-	public String rigisterBook(Book book);
+	public boolean rigisterBook(Book book);
 	public List<Book> fetchAllBooks();
+	
+	public Book getBookById(int i);
 
 }
