@@ -1,4 +1,4 @@
-package com.example.demo.bookcontroller;
+package com.example.demo.controller;
 
 import java.net.HttpURLConnection;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.bookService.BookService;
+import com.example.demo.Service.BookService;
 import com.example.demo.entity.Book;
 import com.example.demo.model.Constants;
 import com.example.demo.model.ResponseMessage;
