@@ -6,5 +6,6 @@ import com.example.demo.entity.User;
 public interface UserService {
 	
 	public User insertUserDtls(UserDTO userDTO);
+	public User checkUser(UserDTO userDto);
 
 }

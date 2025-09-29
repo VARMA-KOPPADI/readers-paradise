@@ -4,9 +4,11 @@ import java.net.HttpURLConnection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +23,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-@Tag(name = "UserRegisterController is hear",description = "UserRegister Regsiter and Login")
+
+@Tag(name = "UserRegisterController is hear", description = "UserRegister Regsiter and Login")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -33,12 +36,10 @@ public class UserController {
 		return new String();
 	}
 
-	 @Operation(summary = "Create User Register",description = "e commerece online books store  register the users")
-	    @ApiResponses({
-	     @ApiResponse(responseCode = "201",description = "user register successfully"),
-	     @ApiResponse(responseCode = "400",description = "user register failure"),
-	     @ApiResponse(responseCode = "500",description = "Internal server error")
-	     })
+	@Operation(summary = "Create User Register", description = "e commerece online books store  register the users")
+	@ApiResponses({ @ApiResponse(responseCode = "201", description = "user register successfully"),
+			@ApiResponse(responseCode = "400", description = "user register failure"),
+			@ApiResponse(responseCode = "500", description = "Internal server error") })
 	@PostMapping("/userregisters")
 	public ResponseEntity<ResponseMessage> inserUser(UserDTO userDTO) {
 		try {
@@ -61,5 +62,33 @@ public class UserController {
 					new ResponseMessage(HttpURLConnection.HTTP_NOT_FOUND, Constants.FAIL, "Internal Server Error"));
 		}
 	}
+
+	@PostMapping("/userLogIn")
+	public ResponseEntity<ResponseMessage> loginUser(@RequestBody UserDTO userDTO) {
+	    try {
+	        // Check if email or password is empty
+	        if (userDTO.getEmail() == null || userDTO.getEmail().isEmpty()
+	                || userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	                    .body(new ResponseMessage(Constants.FAILED, "Email and password cannot be empty"));
+	        }
+
+	        // Check user credentials
+	        User checkUser = userService.checkUser(userDTO);
+	        if (checkUser != null) {
+	            return ResponseEntity.status(HttpStatus.ACCEPTED) // 202 Accepted
+	                    .body(new ResponseMessage(Constants.SUCCESS, "Login successful", checkUser));
+	        } else {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                    .body(new ResponseMessage(Constants.FAILED, "Invalid credentials"));
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace(); // log exception
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new ResponseMessage(Constants.FAILED, "We are facing server issues"));
+	    }
+	}
+
 
 }

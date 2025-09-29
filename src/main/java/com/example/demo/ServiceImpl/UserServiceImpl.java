@@ -7,29 +7,42 @@ import com.example.demo.Repo.UserRepo;
 import com.example.demo.Service.UserService;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.User;
+
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepo userRepo;
 
 	@Override
-	public User insertUserDtls(UserDTO userDTO) {
+	public User insertUserDtls(UserDTO udto) {
 
-		User user = new User();
 		try {
-			user.setUserFirstName(userDTO.getUserFirstName());
-			user.setUserLastName(userDTO.getUserLastName());
-			user.setEmail(userDTO.getEmail());
-			user.setPassword(userDTO.getPassword());
-			user.setDepartment(userDTO.getDepartment());
-			user.setPhNum(userDTO.getPhNum());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		@SuppressWarnings("static-access")
+		User user = new User()
+				.builder()
+				.userFirstName(udto.getUserFirstName())
+				.userLastName(udto.getUserLastName())
+				.email(udto.getEmail())
+				.password(udto.getPassword())
+				.department(udto.getDepartment())
+				.phNum(udto.getPhNum())
+				.build();
 		userRepo.save(user);
-
 		return user;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}	
 	}
 
+	@Override
+	public User checkUser(UserDTO userDto) {
+		User user = userRepo.findByEmail(userDto.getEmail());
+		if(user.getEmail().equals(userDto.getEmail()) && user.getPassword().equals(userDto.getPassword()))
+			return user;
+		return null;
+	}
+
+	
 }
