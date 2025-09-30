@@ -4,7 +4,8 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,13 +18,13 @@ public class FileController
 
 	@Autowired
 	private FileService fileService;
-	
-	public ResponseEntity<ResponseMessage> uploadfile(@RequestBody MultipartFile file) throws IOException
+	@PostMapping("/uploadfile")
+	public ResponseEntity<ResponseMessage> uploadfile(@RequestParam MultipartFile file) throws IOException
 	{
+		System.out.println(file +"iiiiiiiiiioio");
 		String uploadSingleFile = fileService.uploadSingleFile(file);
 		
 		return ResponseEntity.ok(new ResponseMessage(uploadSingleFile, file.getOriginalFilename()));
 	}
-	
 	
 }

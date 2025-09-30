@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.entity.FileEntity;
 
-public interface FileRepo extends JpaRepository<FileEntity, Integer> {
+public interface FileRepo extends JpaRepository<FileEntity, Long> {
 
 }
