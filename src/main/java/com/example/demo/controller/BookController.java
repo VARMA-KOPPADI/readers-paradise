@@ -38,7 +38,7 @@ public class BookController {
 	public ResponseEntity<ResponseMessage> getbyid(@RequestParam int i) {
 		//return "book details : " + bookService.getbookbyid(i);
 		  Book id = bookService.getBookById(i);
-		  return ResponseEntity.ok(new ResponseMessage(HttpURLConnection.HTTP_ACCEPTED, Constants.SUCCESS, "data found", id)); 
+		  return ResponseEntity.ok(new ResponseMessage(HttpURLConnection.HTTP_ACCEPTED, Constants.SUCCESS, "data found with id "+id)); 
 
 	}
 

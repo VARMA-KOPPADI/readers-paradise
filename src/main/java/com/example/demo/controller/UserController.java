@@ -4,7 +4,6 @@ import java.net.HttpURLConnection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Service.UserService;
 import com.example.demo.dto.UserDTO;
+import com.example.demo.dto.UserLogInDTO;
 import com.example.demo.entity.User;
 import com.example.demo.model.Constants;
 import com.example.demo.model.ResponseMessage;
@@ -63,29 +63,37 @@ public class UserController {
 		}
 	}
 
+	@Operation(summary = "Login functionality", description = "e commerece online books store  login  user")
+	@ApiResponses({ @ApiResponse(responseCode = "201", description = "User LogIn Successfully"),
+			@ApiResponse(responseCode = "400", description = "user login failure"),
+			@ApiResponse(responseCode = "500", description = "Internal server error") })
 	@PostMapping("/userLogIn")
-	public ResponseEntity<ResponseMessage> loginUser(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<ResponseMessage> loginUser(@RequestBody UserLogInDTO logindto ) {
+		
 	    try {
 	        // Check if email or password is empty
-	        if (userDTO.getEmail() == null || userDTO.getEmail().isEmpty()
-	                || userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
-	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+	        if (logindto .getEmail() == null || logindto .getEmail().isEmpty()
+	                || logindto .getPassword() == null || logindto .getPassword().isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST)//400
 	                    .body(new ResponseMessage(Constants.FAILED, "Email and password cannot be empty"));
 	        }
 
 	        // Check user credentials
-	        User checkUser = userService.checkUser(userDTO);
-	        if (checkUser != null) {
-	            return ResponseEntity.status(HttpStatus.ACCEPTED) // 202 Accepted
-	                    .body(new ResponseMessage(Constants.SUCCESS, "Login successful", checkUser));
+	        User checkUser = userService.checkUser(logindto );
+	        
+	        if (checkUser == null) {
+	        	  return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+		                    .body(new ResponseMessage(Constants.FAILED, "Invalid credentials"));
 	        } else {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                    .body(new ResponseMessage(Constants.FAILED, "Invalid credentials"));
+	        	
+	        	 return ResponseEntity.status(HttpStatus.ACCEPTED) // 202 
+		                    .body(new ResponseMessage(Constants.SUCCESS, "Login successful", checkUser));
+	          
 	        }
 
 	    } catch (Exception e) {
-	        e.printStackTrace(); // log exception
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	        e.printStackTrace(); 
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)//500
 	                .body(new ResponseMessage(Constants.FAILED, "We are facing server issues"));
 	    }
 	}

@@ -8,6 +8,12 @@ import lombok.Data;
 
 @Data
 public class ResponseMessage {
+	private int statusCode;
+	private String status;
+	private String statusMsg;
+	private Object data;
+	private List list;
+	
 	
 	public ResponseMessage(String status, String statusMsg) {
 		super();
@@ -16,13 +22,24 @@ public class ResponseMessage {
 	}
 
 
-	private int statusCode;
-	private String status;
-	private String statusMsg;
-	private Object data;
-	private List list;
-	
-	
+	public ResponseMessage(int statusCode, String status, String statusMsg, Object data, List list) {
+		super();
+		this.statusCode = statusCode;
+		this.status = status;
+		this.statusMsg = statusMsg;
+		this.data = data;
+		this.list = list;
+	}
+
+
+	public ResponseMessage(String status, String statusMsg, Object data) {
+		super();
+		this.status = status;
+		this.statusMsg = statusMsg;
+		this.data = data;
+	}
+
+
 	public ResponseMessage(int statusCode, String status, String statusMsg, Object data) {
 		super();
 		this.statusCode = statusCode;
@@ -40,8 +57,11 @@ public class ResponseMessage {
 	}
 
 
-	public ResponseMessage(String success, String string, User checkUser) {
-		// TODO Auto-generated constructor stub
-	}
+	
+
+
+	
+	
+
 
 }
